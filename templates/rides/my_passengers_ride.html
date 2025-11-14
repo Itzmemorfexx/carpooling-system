@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">My Ride Requests</h2>
+
+    {% for req in page_obj %}
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">From {{ req.ride.pickup_location }} to {{ req.ride.destination }}</h5>
+            
+            <div class="mb-3">
+                <p class="mb-1"><strong>Date:</strong> {{ req.ride.departure_date }} at {{ req.ride.departure_time }}</p>
+                <p class="mb-1"><strong>Driver:</strong> {{ req.ride.driver.username }}</p>
+                <p class="mb-1"><strong>Vehicle:</strong> {{ req.ride.car_model }} ({{ req.ride.car_number }})</p>
+                <p class="mb-1"><strong>Seats Requested:</strong> {{ req.number_of_seats }}</p>
+                <p class="mb-1"><strong>Total Fare:</strong> ₹{{ req.total_fare }}</p>
+                <p class="mb-1"><strong>Status:</strong> 
+                    <span class="badge 
+                        {% if req.status == 'pending' %}bg-warning text-dark
+                        {% elif req.status == 'accepted' %}bg-success
+                        {% elif req.status == 'rejected' or req.status == 'cancelled' %}bg-danger
+                        {% endif %}">
+                        {{ req.status|title }}
+                    </span>
+                </p>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="{% url 'ride_detail' req.ride.pk %}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-info-circle me-1"></i> View Details
+                </a>
+
+                {% if req.status == 'pending' and request.user == req.passenger %}
+                
+                <form action="{% url 'ride_request_cancel' req.pk %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm" 
+                            onclick="return confirm('Are you sure you want to cancel this ride request?');">
+                        <i class="fas fa-times-circle me-1"></i> Cancel Request
+                    </button>
+                </form>
+                
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">You haven't requested any rides yet.</div>
+    {% endfor %}
+</div>
+{% endblock %}

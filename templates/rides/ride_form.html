@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Create New Ride</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="needs-validation" >
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <strong>Error!</strong> Please correct the following:
+                                <ul class="mb-0">
+                                    {% for field, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            <li>{{ field|title }}: {{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.pickup_location|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.destination|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.departure_date|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="time-input-container">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-1">
+                                            {{ form.departure_time|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.available_seats|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.price_per_seat|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form.car_model|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.car_color|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.car_number|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-car"></i> Create Ride
+                            </button>
+                            <a href="{% url 'ride_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<style>
+    .time-input-container {
+        position: relative;
+    }
+    
+    .time-input-container input {
+        padding-right: 80px !important;
+    }
+    
+    .time-period-selector {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        gap: 5px;
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .time-period-selector button {
+        padding: 2px 8px;
+        border: 1px solid #ced4da;
+        background: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    
+    .time-period-selector button.active {
+        background: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+</style>
+
+<script>
+    // Time formatting function
+    function formatTimeInput(input) {
+        if (input.value) {
+            // Remove any extra spaces
+            input.value = input.value.trim();
+            
+            // If already in 12-hour format with AM/PM, return
+            if (input.value.match(/^\d{1,2}:\d{2}\s*[AaPp][Mm]$/)) {
+                return;
+            }
+            
+            // Try to parse the time
+            const timeMatch = input.value.match(/^(\d{1,2}):(\d{2})$/);
+            if (timeMatch) {
+                let hours = parseInt(timeMatch[1]);
+                const minutes = timeMatch[2];
+                
+                // Convert to 12-hour format
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12;
+                
+                // Format the time
+                input.value = `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+            }
+        }
+    }
+
+    // Initialize date picker and time input
+    $(document).ready(function() {
+        $('#id_departure_date').datepicker({
+            minDate: 0,
+            dateFormat: 'yy-mm-dd'
+        });
+
+        // Set initial time value if empty
+        const timeInput = document.getElementById('id_departure_time');
+        if (timeInput) {
+            // Create AM/PM selector
+            const timeContainer = timeInput.parentElement;
+            const periodSelector = document.createElement('div');
+            periodSelector.className = 'time-period-selector';
+            
+            const amButton = document.createElement('button');
+            amButton.type = 'button';
+            amButton.textContent = 'AM';
+            amButton.onclick = () => setTimePeriod('AM');
+            
+            const pmButton = document.createElement('button');
+            pmButton.type = 'button';
+            pmButton.textContent = 'PM';
+            pmButton.onclick = () => setTimePeriod('PM');
+            
+            periodSelector.appendChild(amButton);
+            periodSelector.appendChild(pmButton);
+            timeContainer.appendChild(periodSelector);
+
+            // Set initial time value if empty
+            if (!timeInput.value) {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const hours12 = hours % 12 || 12;
+                timeInput.value = `${hours12.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+            }
+
+            // Set initial active button
+            const currentPeriod = timeInput.value.includes('PM') ? 'PM' : 'AM';
+            setTimePeriod(currentPeriod);
+
+            // Add input event listener
+            timeInput.addEventListener('input', function() {
+                formatTimeInput(this);
+            });
+        }
+
+        function setTimePeriod(period) {
+            const timeInput = document.getElementById('id_departure_time');
+            const buttons = document.querySelectorAll('.time-period-selector button');
+            
+            // Update active button
+            buttons.forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === period);
+            });
+            
+            // Update time value
+            if (timeInput.value) {
+                const [time] = timeInput.value.split(' ');
+                timeInput.value = `${time} ${period}`;
+            }
+        }
+
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    });
+</script>
+{% endblock %}
+{% endblock %} 

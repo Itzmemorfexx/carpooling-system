@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section text-center py-5">
+    <div class="container">
+        <h1 class="display-4 mb-4">
+            <i class="fas fa-car me-2"></i>Welcome to PoolMate
+        </h1>
+        <p class="lead mb-4">Your trusted platform for carpooling and ride-sharing. Save money, reduce emissions, and make new connections.</p>
+        {% if user.is_authenticated %}
+            <div class="mt-4">
+                <a href="{% url 'find_ride' %}" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-search me-2"></i>Find a Ride
+                </a>
+                <a href="{% url 'ride_create' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>Offer a Ride
+                </a>
+            </div>
+        {% else %}
+            <div class="mt-4">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-user-plus me-2"></i>Get Started
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose PoolMate?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <i class="fas fa-dollar-sign fa-3x text-primary mb-3"></i>
+                    <h3>Save Money</h3>
+                    <p>Split travel costs with other passengers and save on your journey.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <i class="fas fa-leaf fa-3x text-primary mb-3"></i>
+                    <h3>Eco-Friendly</h3>
+                    <p>Reduce your carbon footprint by sharing rides with others.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h3>Safe Travel</h3>
+                    <p>All our drivers are verified and rated by the community.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="how-it-works py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="step-card text-center">
+                    <div class="step-number">1</div>
+                    <i class="fas fa-user-plus fa-2x text-primary mb-3"></i>
+                    <h4>Create Account</h4>
+                    <p>Sign up and complete your profile</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card text-center">
+                    <div class="step-number">2</div>
+                    <i class="fas fa-search fa-2x text-primary mb-3"></i>
+                    <h4>Find Rides</h4>
+                    <p>Search for available rides</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card text-center">
+                    <div class="step-number">3</div>
+                    <i class="fas fa-car fa-2x text-primary mb-3"></i>
+                    <h4>Book Ride</h4>
+                    <p>Request and confirm your booking</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card text-center">
+                    <div class="step-number">4</div>
+                    <i class="fas fa-star fa-2x text-primary mb-3"></i>
+                    <h4>Rate & Review</h4>
+                    <p>Share your experience</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="stats-section py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h2 class="display-4">1000+</h2>
+                    <p>Active Users</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <i class="fas fa-car-side fa-3x text-primary mb-3"></i>
+                    <h2 class="display-4">500+</h2>
+                    <p>Daily Rides</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <i class="fas fa-leaf fa-3x text-primary mb-3"></i>
+                    <h2 class="display-4">2000+</h2>
+                    <p>CO2 Saved (kg)</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <i class="fas fa-star fa-3x text-primary mb-3"></i>
+                    <h2 class="display-4">4.8/5</h2>
+                    <p>User Rating</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Start Your Journey?</h2>
+        <p class="lead mb-4">Join thousands of users who are already saving money and reducing their carbon footprint.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'find_ride' %}" class="btn btn-light btn-lg">
+                <i class="fas fa-search me-2"></i>Find Your Ride
+            </a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-light btn-lg">
+                <i class="fas fa-user-plus me-2"></i>Get Started Now
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %} 

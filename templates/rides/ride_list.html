@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
+                <i class="fas fa-list me-2"></i>Available Rides
+            </h2>
+            <a href="{% url 'find_ride' %}" class="btn btn-outline-primary">
+                <i class="fas fa-search me-1"></i>Modify Search
+            </a>
+        </div>
+
+        <!-- Search Summary -->
+        {% if pickup_location or destination or date %}
+        <div class="alert alert-info mb-4">
+            <h5 class="alert-heading">
+                <i class="fas fa-filter me-2"></i>Search Filters
+            </h5>
+            <div class="row">
+                {% if pickup_location %}
+                <div class="col-md-4">
+                    <small class="text-muted">From:</small>
+                    <p class="mb-0"><i class="fas fa-map-marker-alt me-1"></i>{{ pickup_location }}</p>
+                </div>
+                {% endif %}
+                {% if destination %}
+                <div class="col-md-4">
+                    <small class="text-muted">To:</small>
+                    <p class="mb-0"><i class="fas fa-flag-checkered me-1"></i>{{ destination }}</p>
+                </div>
+                {% endif %}
+                {% if date %}
+                <div class="col-md-4">
+                    <small class="text-muted">Date:</small>
+                    <p class="mb-0"><i class="fas fa-calendar me-1"></i>{{ date }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Rides List -->
+        {% if rides %}
+            <div class="row">
+                {% for ride in rides %}
+                    <div class="col-md-6 mb-4">
+                        <div class="ride-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h3 class="ride-title">
+                                    <i class="fas fa-route me-2"></i>{{ ride.pickup_location }} → {{ ride.destination }}
+                                </h3>
+                                <span class="badge bg-primary">{{ ride.status|title }}</span>
+                            </div>
+                            <div class="ride-details">
+                                <p><i class="fas fa-user me-2"></i>Driver: {{ ride.driver.username }}</p>
+                                <p><i class="fas fa-calendar me-2"></i>Date: {{ ride.departure_date|date:"F d, Y" }}</p>
+                                <p><i class="fas fa-clock me-2"></i>Time: {{ ride.departure_time }}</p>
+                                <p><i class="fas fa-chair me-2"></i>Available Seats: {{ ride.remaining_seats }}/{{ ride.available_seats }}</p>
+                                <p><i class="fas fa-dollar-sign me-2"></i>Price per Seat: ${{ ride.price_per_seat }}</p>
+                                {% if ride.description %}
+                                    <p><i class="fas fa-info-circle me-2"></i>{{ ride.description }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="mt-3">
+                                <a href="{% url 'ride_detail' ride.pk %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-info-circle me-1"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4>No rides found</h4>
+                <p class="text-muted">Try adjusting your search criteria or check back later.</p>
+                {% if user.is_authenticated %}
+                    <div class="mt-4">
+                        <a href="{% url 'find_ride' %}" class="btn btn-primary me-2">
+                            <i class="fas fa-search me-1"></i>New Search
+                        </a>
+                        <a href="{% url 'ride_create' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-plus-circle me-1"></i>Offer a Ride
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %} 

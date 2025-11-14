@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Ride Details Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Ride Details</h3>
+                    <span class="badge bg-light text-primary">{{ ride.get_status_display }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Route Information</h5>
+                            <p><i class="fas fa-map-marker-alt me-2"></i>From: {{ ride.pickup_location }}</p>
+                            <p><i class="fas fa-flag-checkered me-2"></i>To: {{ ride.destination }}</p>
+                            <p><i class="fas fa-calendar me-2"></i>Date: {{ ride.departure_date|date:"F d, Y" }}</p>
+                            <p><i class="fas fa-clock me-2"></i>Time: {{ ride.departure_time }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Ride Information</h5>
+                            <p><i class="fas fa-user me-2"></i>Driver: {{ ride.driver.get_full_name|default:ride.driver.username }}</p>
+                            <p><i class="fas fa-chair me-2"></i>Available Seats: {{ ride.available_seats }}</p>
+                            <p><i class="fas fa-dollar-sign me-2"></i>Price per Seat: ${{ ride.price_per_seat }}</p>
+                            {% if ride.car_model %}
+                            <p><i class="fas fa-car me-2"></i>Car: {{ ride.car_model }} ({{ ride.car_color }})</p>
+                            {% endif %}
+                            {% if ride.car_number %}
+                            <p><i class="fas fa-id-card me-2"></i>Car Number: {{ ride.car_number }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if ride.preferences %}
+                    <div class="mt-4">
+                        <h5>Preferences</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for preference in ride.preferences %}
+                            <span class="badge bg-info">{{ preference|title }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">Reviews</h4>
+                </div>
+                <div class="card-body">
+                    {% if ride.reviews.all %}
+                        {% for review in ride.reviews.all %}
+                        <div class="review-item mb-4 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="mb-1">{{ review.reviewer.get_full_name|default:review.reviewer.username }}</h5>
+                                    <div class="rating mb-2">
+                                        {% for i in "12345" %}
+                                        <i class="fas fa-star {% if i <= review.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                        {% endfor %}
+                                    </div>
+                                    <p class="mb-0">{{ review.comment }}</p>
+                                </div>
+                                <small class="text-muted">{{ review.created_at|date:"F j, Y" }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">No reviews yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Action Buttons -->
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">Actions</h4>
+                </div>
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        {% if user == ride.driver %}
+                            {% if ride.status == 'active' %}
+                                <a href="{% url 'ride_update' ride.pk %}" class="btn btn-warning w-100 mb-2">
+                                    <i class="fas fa-edit me-2"></i>Edit Ride
+                                </a>
+                                <a href="{% url 'ride_delete' ride.pk %}" class="btn btn-danger w-100 mb-2">
+                                    <i class="fas fa-trash me-2"></i>Delete Ride
+                                </a>
+                            {% endif %}
+                            {% if ride.status == 'in_progress' %}
+                                <a href="{% url 'ride_tracking' ride.pk %}" class="btn btn-primary w-100 mb-2">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Track Ride
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            {% if not user_request %}
+                                {% if ride.status == 'active' %}
+                                   
+                                    <a href="{% url 'ride_book' ride.pk %}" class="btn btn-success w-100 mb-2">
+                                        <i class="fas fa-ticket-alt me-2"></i>Book Now
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <h5 class="alert-heading">Your Request Status</h5>
+                                    <p class="mb-0">Status: {{ user_request.get_status_display }}</p>
+                                    <p class="mb-0">Seats: {{ user_request.number_of_seats }}</p>
+                                    {% if user_request.total_fare %}
+                                    <p class="mb-0">Total Fare: ${{ user_request.total_fare }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Request a Seat
+                        </a>
+                    {% endif %}
+
+                    <a href="{% url 'ride_list' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Rides
+                    </a>
+                </div>
+            </div>
+
+            <!-- Driver Information -->
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="mb-0">Driver Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-circle fa-3x text-primary"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="mb-0">{{ ride.driver.get_full_name|default:ride.driver.username }}</h5>
+                            <small class="text-muted">Member since {{ ride.driver.date_joined|date:"F Y" }}</small>
+                        </div>
+                    </div>
+                    <a href="{% url 'view_reviews' ride.driver.id %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-star me-2"></i>View Driver Reviews
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-clock me-2"></i>
+                        Manage Ride Request
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Ride Details -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Ride Information</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>From:</strong> {{ ride.pickup_location }}</p>
+                                <p><strong>To:</strong> {{ ride.destination }}</p>
+                                <p><strong>Date:</strong> {{ ride.departure_date|date:"M d, Y" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Time:</strong> {{ ride.departure_time|time:"H:i" }}</p>
+                                <p><strong>Requested Seats:</strong> {{ ride_request.number_of_seats }}</p>
+                                <p><strong>Total Fare:</strong> ${{ ride_request.total_fare }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Passenger Details -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Passenger Information</h5>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                {% if passenger_profile.profile_picture %}
+                                    <img src="{{ passenger_profile.profile_picture.url }}" 
+                                         class="rounded-circle" 
+                                         width="80" 
+                                         height="80" 
+                                         alt="{{ passenger.username }}">
+                                {% else %}
+                                    <img src="{% static 'images/default-profile.png' %}" 
+                                         class="rounded-circle" 
+                                         width="80" 
+                                         height="80" 
+                                         alt="Default profile">
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5>{{ passenger.get_full_name|default:passenger.username }}</h5>
+                                <p class="text-muted mb-1">
+                                    <i class="fas fa-star text-warning"></i>
+                                    Rating: {{ passenger_profile.rating|default:"No ratings yet" }}
+                                </p>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-car me-1"></i>
+                                    {{ passenger_profile.total_rides|default:"0" }} rides
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Phone:</strong> 
+                                    {% if passenger_profile.phone_number %}
+                                        {{ passenger_profile.phone_number }}
+                                        {% if passenger_profile.is_phone_verified %}
+                                            <span class="badge bg-success ms-2">Verified</span>
+                                        {% endif %}
+                                    {% else %}
+                                        Not provided
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Member Since:</strong> 
+                                    {{ passenger.date_joined|date:"M Y" }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between pt-3 border-top">
+                        <a href="{% url 'pending_requests' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Requests
+                        </a>
+                        <div class="btn-group">
+                            <form method="post" class="me-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="reject">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-times me-1"></i> Reject
+                                </button>
+                            </form>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="accept">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check me-1"></i> Accept
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

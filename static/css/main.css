@@ -1,0 +1,126 @@
+/* Profile Styles */
+.profile-header {
+    background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ride-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out;
+    height: 100%;
+}
+
+.ride-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ride-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.ride-details {
+    margin: 1rem 0;
+}
+
+.ride-details p {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.ride-details i {
+    width: 20px;
+    color: #6B73FF;
+}
+
+.badge {
+    padding: 0.5em 1em;
+    font-weight: 500;
+}
+
+.bg-pending {
+    background-color: #FFC107 !important;
+    color: #000 !important;
+}
+
+.bg-accepted {
+    background-color: #28A745 !important;
+    color: white !important;
+}
+
+.bg-rejected {
+    background-color: #DC3545 !important;
+    color: white !important;
+}
+
+.bg-completed {
+    background-color: #17A2B8 !important;
+    color: white !important;
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: #6B73FF;
+    box-shadow: 0 0 0 0.2rem rgba(107, 115, 255, 0.25);
+}
+
+.btn-primary {
+    background-color: #6B73FF;
+    border-color: #6B73FF;
+}
+
+.btn-primary:hover {
+    background-color: #000DFF;
+    border-color: #000DFF;
+}
+
+/* Content Section */
+.content-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.content-section h3 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+/* Empty State */
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .profile-header {
+        padding: 2rem 0;
+    }
+    
+    .profile-img {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .content-section {
+        padding: 1.5rem;
+    }
+} 

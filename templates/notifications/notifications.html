@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+<!-- User Profile Section -->
+<div class="col-md-4">
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}"
+                     alt="{{ user.get_full_name|default:user.username }}"
+                     class="rounded-circle mb-3"
+                     style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'images/default-avatar.png' %}"
+                     alt="{{ user.get_full_name|default:user.username }}"
+                     class="rounded-circle mb-3"
+                     style="width: 150px; height: 150px; object-fit: cover;">
+            {% endif %}
+            <h4>{{ user.get_full_name|default:user.username }}</h4>
+            <div class="rating mb-2">
+                {% for i in "12345" %}
+                <i class="fas fa-star {% if i <= avg_rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                {% endfor %}
+            </div>
+            <p class="text-muted">{{ reviews.count }} reviews</p>
+        </div>
+    </div>
+</div>
+
+
+        <!-- Notifications Section -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Notifications</h4>
+                    <span class="badge bg-primary">Unread: {{ request.user.unread_notification_count }}</span>
+                </div>
+                <div class="card-body notification-container" style="max-height: 500px; overflow-y: auto;">
+                    {% if notifications %}
+                        {% for notification in notifications %}
+                        <div class="notification p-3 mb-3 rounded {% if not notification.is_read %}bg-light border-start border-primary border-4{% else %}bg-white{% endif %}" 
+                             onclick="markAsRead({{ notification.id }})"
+                             style="cursor: pointer;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="mb-1">{{ notification.message }}</p>
+                                    <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+                                </div>
+                                {% if not notification.is_read %}
+                                <span class="badge bg-danger">New</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">No notifications yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Notification Handling -->
+<script>
+function markAsRead(notificationId) {
+    fetch(`/api/notifications/${notificationId}/mark-as-read/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            const notificationElement = document.querySelector(`.notification[onclick*="${notificationId}"]`);
+            if (notificationElement) {
+                notificationElement.classList.remove('bg-light', 'border-start', 'border-primary', 'border-4');
+                notificationElement.classList.add('bg-white');
+                const badge = notificationElement.querySelector('.badge.bg-danger');
+                if (badge) badge.remove();
+                updateUnreadCount();
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function updateUnreadCount() {
+    const countElement = document.querySelector('.badge.bg-primary');
+    if (countElement) {
+        fetch('/api/notifications/unread-count/')
+            .then(response => response.json())
+            .then(data => {
+                countElement.textContent = `Unread: ${data.count}`;
+            });
+    }
+}
+</script>
+{% endblock %}

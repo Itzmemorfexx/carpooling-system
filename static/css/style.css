@@ -1,0 +1,385 @@
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar Styling */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff !important;
+}
+
+.nav-link {
+    color: rgba(255,255,255,.9) !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffffff !important;
+}
+
+/* Content Section Styling */
+.content-section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    margin-bottom: 20px;
+    border: none;
+}
+
+/* Card Styling */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Form Styling */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    padding: 10px 15px;
+}
+
+.form-control:focus {
+    border-color: #1e3c72;
+    box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.25);
+}
+
+/* Button Styling */
+.btn {
+    border-radius: 5px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+    transform: translateY(-2px);
+}
+
+.btn-outline-info {
+    color: #1e3c72;
+    border-color: #1e3c72;
+}
+
+.btn-outline-info:hover {
+    background-color: #1e3c72;
+    color: #ffffff;
+}
+
+/* Ride Card Styling */
+.ride-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    transition: transform 0.3s ease;
+}
+
+.ride-card:hover {
+    transform: translateY(-5px);
+}
+
+.ride-title {
+    color: #1e3c72;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.ride-details {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Profile Styling */
+.profile-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 30px 0;
+    margin-bottom: 30px;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid #ffffff;
+    box-shadow: 0 0 15px rgba(0,0,0,.1);
+}
+
+/* Alert Styling */
+.alert {
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+}
+
+/* Search Form Styling */
+.search-form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    margin-bottom: 30px;
+}
+
+/* Footer Styling */
+.footer {
+    background: #1e3c72;
+    color: #ffffff;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .content-section {
+        padding: 15px;
+    }
+    
+    .profile-img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* Find Ride Page Styles */
+.feature-card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0,0,0,.1);
+}
+
+.feature-card i {
+    color: #1e3c72;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 1rem 0;
+}
+
+.search-form {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,.05);
+}
+
+.form-control-lg {
+    height: 3.5rem;
+    font-size: 1.1rem;
+}
+
+.form-control-lg:focus {
+    border-color: #1e3c72;
+    box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.25);
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Search Results Styles */
+.alert-info {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #1e3c72;
+}
+
+.alert-info .alert-heading {
+    color: #1e3c72;
+    margin-bottom: 1rem;
+}
+
+.alert-info p {
+    font-weight: 500;
+}
+
+.alert-info i {
+    color: #1e3c72;
+    width: 20px;
+}
+
+/* Homepage Styles */
+.hero-section {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 6rem 0;
+    margin-top: -2rem;
+    margin-bottom: 2rem;
+}
+
+.hero-section h1 {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.hero-section .lead {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    transition: transform 0.3s ease;
+    height: 100%;
+    padding: 2rem;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0,0,0,.1);
+}
+
+.feature-card i {
+    color: #1e3c72;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 1rem 0;
+}
+
+.step-card {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: #1e3c72;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.step-card h4 {
+    font-size: 1.25rem;
+    color: #333;
+    margin: 1rem 0;
+}
+
+.stat-card {
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card h2 {
+    color: #1e3c72;
+    font-weight: 700;
+}
+
+.stat-card p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 4rem 0;
+}
+
+.cta-section h2 {
+    font-weight: 700;
+}
+
+.cta-section .btn-light {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 4rem 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .feature-card, .step-card, .stat-card {
+        margin-bottom: 1.5rem;
+    }
+} 
+.notification {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.notification.unread {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.notification:hover {
+    background-color: #e9ecef;
+}
+/* Add to your CSS file */
+.request-passenger-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ride-details-card {
+    border-left: 4px solid #0d6efd;
+}
+
+.action-buttons .btn {
+    min-width: 100px;
+}

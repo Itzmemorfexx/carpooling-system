@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-success">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0"><i class="fas fa-check-circle me-2"></i>Ride Request Submitted</h3>
+                </div>
+                <div class="card-body text-center">
+                    <p class="lead mb-4">
+                        Your ride request has been sent successfully to the driver! 🎉<br>
+                        You will be notified once the driver responds.
+                    </p>
+                    <a href="{% url 'home' %}" class="btn btn-primary">
+                        <i class="fas fa-home me-2"></i>Go to Homepage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

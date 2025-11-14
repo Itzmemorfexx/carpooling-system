@@ -1,0 +1,56 @@
+{% include "django/forms/widgets/input.html" %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const timeInput = document.querySelector('input[name="{{ widget.name }}"]');
+    if (timeInput) {
+        // Set initial value in 12-hour format if empty
+        if (!timeInput.value) {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const hours12 = hours % 12 || 12;
+            timeInput.value = `${hours12.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        }
+
+        // Add custom styling
+        timeInput.style.cssText = `
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #ced4da;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            width: 100%;
+            background-color: #fff;
+        `;
+
+        // Add focus effect
+        timeInput.addEventListener('focus', function() {
+            this.style.borderColor = '#86b7fe';
+            this.style.boxShadow = '0 0 0 0.25rem rgba(13, 110, 253, 0.25)';
+        });
+
+        timeInput.addEventListener('blur', function() {
+            this.style.borderColor = '#ced4da';
+            this.style.boxShadow = 'none';
+        });
+
+        // Format time on change
+        timeInput.addEventListener('change', function() {
+            if (this.value) {
+                const [time, period] = this.value.split(' ');
+                if (period) {
+                    // Already in 12-hour format
+                    return;
+                }
+                const [hours, minutes] = time.split(':');
+                let hoursNum = parseInt(hours);
+                const ampm = hoursNum >= 12 ? 'PM' : 'AM';
+                hoursNum = hoursNum % 12 || 12;
+                this.value = `${hoursNum.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+            }
+        });
+    }
+});
+</script> 

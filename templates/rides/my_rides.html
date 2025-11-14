@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}My Rides - PoolMate{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">My Rides</h2>
+
+    <!-- Rides as Driver -->
+    {% if rides_as_driver %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Rides I'm Driving</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Available Seats</th>
+                            <th>Price/Seat</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ride in rides_as_driver %}
+                        <tr>
+                            <td>{{ ride.pickup_location }}</td>
+                            <td>{{ ride.destination }}</td>
+                            <td>{{ ride.departure_date|date:"M d, Y" }}</td>
+                            <td>{{ ride.departure_time|time:"H:i" }}</td>
+                            <td>{{ ride.available_seats }}</td>
+                            <td>${{ ride.price_per_seat }}</td>
+                            <td>
+                                <span class="badge {% if ride.status == 'scheduled' %}bg-primary{% elif ride.status == 'in_progress' %}bg-success{% elif ride.status == 'completed' %}bg-info{% elif ride.status == 'cancelled' %}bg-danger{% endif %}">
+                                    {{ ride.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'ride_detail' ride.id %}" class="btn btn-sm btn-info">View</a>
+                                {% if ride.status == 'scheduled' %}
+                                <a href="{% url 'ride_update' ride.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Accepted Requests -->
+    {% if accepted_requests %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Accepted Requests</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ride</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Date</th>
+                            <th>Seats</th>
+                            <th>Total Fare</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ride_request in accepted_requests %}
+                        <tr>
+                            <td>{{ request.ride.driver.get_full_name }}</td>
+                            <td>{{ request.ride.pickup_location }}</td>
+                            <td>{{ request.ride.destination }}</td>
+                            <td>{{ request.ride.departure_date|date:"M d, Y" }}</td>
+                            <td>{{ request.number_of_seats }}</td>
+                            <td>${{ request.total_fare|default:"0.00" }}</td>
+                            <td>
+                                <span class="badge bg-success">{{ request.get_status_display }}</span>
+                            </td>
+                            <td>
+                                {% if request.ride.id %}
+                                    <a href="{% url 'ride_detail' request.ride.id %}" class="btn btn-sm btn-info">View</a>
+                                {% else %}
+                                    <span class="text-muted">No ride associated</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Pending Requests -->
+    <!-- Pending Requests -->
+{% if pending_requests %}
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h4 class="mb-0"><i class="fas fa-clock me-2"></i>Pending Requests</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Passenger</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Date</th>
+                        <th>Seats</th>
+                        <th>Total Fare</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ride_request in pending_requests %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'user_profile' request.passenger.username %}">
+                                {{ request.passenger.get_full_name|default:request.passenger.username }}
+                            </a>
+                        </td>
+                        <td>{{ request.ride.pickup_location }}</td>
+                        <td>{{ request.ride.destination }}</td>
+                        <td>{{ request.ride.departure_date|date:"M d, Y" }}</td>
+                        <td>{{ request.number_of_seats }}</td>
+                        <td>${{ request.total_fare|default:"0.00" }}</td>
+                        <td>
+                            <span class="badge bg-warning text-dark">{{ request.get_status_display }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'manage_ride_request' request.id %}" 
+                                   class="btn btn-sm btn-primary" 
+                                   title="Manage Request">
+                                   <i class="fas fa-cog"></i> Manage
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+    <!-- Rejected Requests -->
+    {% if rejected_requests %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Rejected Requests</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ride</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Date</th>
+                            <th>Seats</th>
+                            <th>Total Fare</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ride_request in rejected_requests %}
+                        <tr>
+                            <td>{{ request.ride.driver.get_full_name }}</td>
+                            <td>{{ request.ride.pickup_location }}</td>
+                            <td>{{ request.ride.destination }}</td>
+                            <td>{{ request.ride.departure_date|date:"M d, Y" }}</td>
+                            <td>{{ request.number_of_seats }}</td>
+                            <td>${{ request.total_fare|default:"0.00" }}</td>
+                            <td>
+                                <span class="badge bg-danger">{{ request.get_status_display }}</span>
+                            </td>
+                            <td>
+                                <a href="{% url 'ride_detail' request.ride.id %}" class="btn btn-sm btn-info">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Cancelled Requests -->
+    {% if cancelled_requests %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Cancelled Requests</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ride</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Date</th>
+                            <th>Seats</th>
+                            <th>Total Fare</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ride_request in cancelled_requests %}
+                        <tr>
+                            <td>{{ request.ride.driver.get_full_name }}</td>
+                            <td>{{ request.ride.pickup_location }}</td>
+                            <td>{{ request.ride.destination }}</td>
+                            <td>{{ request.ride.departure_date|date:"M d, Y" }}</td>
+                            <td>{{ request.number_of_seats }}</td>
+                            <td>${{ request.total_fare|default:"0.00" }}</td>
+                            <td>
+                                <span class="badge bg-secondary">{{ request.get_status_display }}</span>
+                            </td>
+                            <td>
+                                <a href="{% url 'ride_detail' request.ride.id %}" class="btn btn-sm btn-info">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not rides_as_driver and not accepted_requests and not pending_requests and not rejected_requests and not cancelled_requests %}
+    <div class="alert alert-info">
+        <p class="mb-0">You don't have any rides or requests yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

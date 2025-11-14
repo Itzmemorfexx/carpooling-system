@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-id-card me-2"></i>Upload ID Document</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-info-circle me-2"></i>Important Information</h5>
+                        <ul class="mb-0">
+                            <li>Please upload a clear photo of your government-issued ID (passport, driver's license, etc.)</li>
+                            <li>The ID must be valid and not expired</li>
+                            <li>All text must be clearly visible</li>
+                            <li>File size should not exceed 5MB</li>
+                            <li>Accepted formats: JPG, PNG, PDF</li>
+                        </ul>
+                    </div>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_document" class="form-label">ID Document</label>
+                            <input type="file" class="form-control" id="id_document" name="id_document" 
+                                   accept=".jpg,.jpeg,.png,.pdf" required>
+                            <div class="form-text">
+                                Maximum file size: 5MB. Accepted formats: JPG, PNG, PDF
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload me-1"></i>Upload Document
+                        </button>
+                        <a href="{% url 'profile' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

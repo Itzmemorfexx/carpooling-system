@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-user-edit me-2"></i>Update Profile</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.phone_number|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.gender|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.date_of_birth|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.preferred_language|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.emergency_contact_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.emergency_contact_phone|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                {{ form.profile_picture|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Save Changes
+                            </button>
+                            <a href="{% url 'profile' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Request a Seat</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Ride Details -->
+                    <div class="mb-4">
+                        <h5>Ride Details</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><i class="fas fa-map-marker-alt me-2"></i>Driver's Route: {{ ride.pickup_location }} → {{ ride.destination }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><i class="fas fa-calendar me-2"></i>Date: {{ ride.departure_date|date:"F d, Y" }}</p>
+                                <p><i class="fas fa-clock me-2"></i>Time: {{ ride.departure_time }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request Form -->
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.pickup_location|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.dropoff_location|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.number_of_seats|as_crispy_field }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.special_requests|as_crispy_field }}
+                        </div>
+
+                        <!-- Fare Preview (now shown after location entry) -->
+                        {% if total_fare %}
+                        <div class="alert alert-info mb-4">
+                            <h5 class="alert-heading">Fare Preview</h5>
+                            <p>From: {{ request.POST.pickup_location }}</p>
+                            <p>To: {{ request.POST.dropoff_location }}</p>
+                            <p>Seats: {{ seats }} × ${{ fare_per_seat }} = ${{ total_fare }}</p>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check me-2"></i>Submit Request
+                            </button>
+                            <a href="{% url 'ride_detail' ride.pk %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get form elements
+    const seatsInput = document.getElementById('id_number_of_seats');
+    const pickupInput = document.getElementById('id_pickup_location');
+    const dropoffInput = document.getElementById('id_dropoff_location');
+    
+    // Function to update fare preview
+    function updateFarePreview() {
+        if (seatsInput.value > 0 && seatsInput.value <= {{ ride.available_seats }}) {
+            const params = new URLSearchParams();
+            params.set('seats', seatsInput.value);
+            params.set('pickup', pickupInput.value);
+            params.set('dropoff', dropoffInput.value);
+            //window.location.search = params.toString();
+        }
+    }
+    
+    // Add event listeners
+    seatsInput.addEventListener('change', updateFarePreview);
+    pickupInput.addEventListener('change', updateFarePreview);
+    dropoffInput.addEventListener('change', updateFarePreview);
+});
+</script>
+{% endblock %}
